@@ -111,7 +111,11 @@ int uio_init(aml_audio_dec_t *audec)
     }
     if (phys_offset == 0)
         phys_offset = ((AIU_AIFIFO_CTRL + addr_offset) << 2) & (pagesize - 1);
-    reg_base = (volatile unsigned*)((unsigned)memmap + phys_offset);
+        #ifdef ARM64_BIT
+        reg_base = (volatile unsigned*)((unsigned long)memmap + phys_offset);
+        #else
+        reg_base = (volatile unsigned*)((unsigned)memmap + phys_offset);
+        #endif
     pthread_mutex_unlock(&uio_mutex);
 
     return 0;
